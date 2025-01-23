@@ -25,8 +25,8 @@ const BookDetail = () => {
     }
   };
 
-  const addReviewPost = async (comment: CommentType, id: string) => {
-    await addReview(comment, id);
+  const addReviewPost = async (comment: CommentType) => {
+    await addReview(comment);
   };
   const handleChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
@@ -95,7 +95,7 @@ const BookDetail = () => {
                         className="rounded-lg bg-blue-500 px-4 text-white py-1 text-sm"
                         onClick={() =>
                           textArea &&
-                          addReviewPost({ comment: [textArea] }, detail.id)
+                          addReviewPost({ comment: [textArea] })
                         }
                       >
                         Send

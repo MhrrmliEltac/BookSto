@@ -1,6 +1,4 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/effect-coverflow";
 import { EffectCoverflow } from "swiper/modules";
 import { useEffect, useRef, useState } from "react";
 import { Swiper as SwiperClass } from "swiper";
@@ -61,12 +59,12 @@ function SwiperComp() {
               <SkeletonLoader />
             </SwiperSlide>
           ))
-        : // Images shown after data is loaded
+        : 
           img &&
           img.map((item: any) => (
             <SwiperSlide
               key={item.id}
-              onClick={() => swiperRef.current.slideNext()}
+              onClick={() => swiperRef.current && swiperRef.current.slideNext()}
             >
               <img src={item.image} alt="slide_image" />
             </SwiperSlide>
