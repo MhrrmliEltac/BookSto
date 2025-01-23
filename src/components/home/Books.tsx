@@ -52,7 +52,6 @@ const Books = ({ allBookData, pageLength }: any) => {
   }, [user]);
 
   useEffect(() => {
-    setSearchParams({ page: page.toString() });
     fetchBooks(page);
   }, [page, setSearchParams]);
 
