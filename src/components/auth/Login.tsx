@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { FormGroup, FormLabel } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -64,13 +64,6 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const addDataBook = async () => {
-  //     await addBook();
-  //   };
-  //   addDataBook();
-  // }, []);
-
   return (
     <Form
       noValidate
@@ -87,9 +80,7 @@ const Login = () => {
             alt="Not a found logo"
           />
         </div>
-        <p className="fs-2 text-center" style={{ color: "#0DD6B8" }}>
-          Sign In
-        </p>
+        <div className="fs-2 flex justify-center text-[#0DD6B8]">Sign In</div>
         <Form.Group as={Col} controlId="validationCustom01">
           <Form.Label>Email Address *</Form.Label>
           <Form.Control

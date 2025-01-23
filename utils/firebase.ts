@@ -9,15 +9,18 @@ import {
 } from "firebase/auth";
 import toast from "react-hot-toast";
 import {
+  arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   limit,
   setDoc,
   startAfter,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { uid } from "uid";
 import { query, orderBy } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -132,8 +135,8 @@ export const getBookData = async () => {
 //? WRITE DATA
 
 export interface Review {
-  comment: string[];
-  rating: number;
+  comment?: string[] | undefined;
+  rating?: number | undefined;
 }
 
 export interface Book {
@@ -144,33 +147,56 @@ export interface Book {
   genre: string;
   image: string;
   review?: Review | null;
+  price: number;
 }
 
+export const addReview = async ({ comment }: Review): Promise<void> => {
+  try {
+    const bookRef = doc(db, "books", "062b6ce859c");
+    await updateDoc(bookRef, {
+      review: arrayUnion({ comment: comment }),
+    });
+    toast.success("Review added successfully");
+  } catch (error) {
+    toast.error((error as Error).message);
+  }
+};
+
 export const addBook = async ({
-  id,
   author,
   book_name,
   description,
   genre,
   image,
   review,
+  price,
 }: Book): Promise<void> => {
   try {
-    await setDoc(doc(db, "books", uid()), {
-      id: id,
-      author: author,
-      book_name: book_name,
-      description: description,
-      image: image,
-      genre: genre,
+    let bookId = localStorage.getItem("bookId");
+
+    if (!bookId) {
+      bookId = "1";
+      localStorage.setItem("bookId", bookId);
+    }
+
+    const newBookId = parseInt(bookId) + 1;
+
+    await setDoc(doc(db, "books", bookId), {
+      id: parseInt(bookId),
+      author,
+      book_name,
+      description,
+      image,
+      genre,
       review: review || null,
+      price,
     });
+
+    localStorage.setItem("bookId", newBookId.toString());
   } catch (error) {
     toast.error((error as Error).message);
   }
 };
-
-//? Pagination
 
 export const pagination = async (pageSize: number, lastDoc: any = null) => {
   try {
@@ -186,5 +212,103 @@ export const pagination = async (pageSize: number, lastDoc: any = null) => {
   } catch (error) {
     toast.error((error as Error).message);
     return { books: [], lastDoc: null };
+  }
+};
+
+export const fetchDocumentsByCondition = async (
+  collectionName: string,
+  id: string | number
+) => {
+  try {
+    const q = query(collection(db, collectionName), where("id", "==", id));
+
+    const querySnapshot = await getDocs(q)
+      .then((snapshot) => {
+        const book = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        return book;
+      })
+      .catch((error) => console.log(error));
+    return querySnapshot;
+  } catch (error) {
+    console.error("Xəta baş verdi:", error);
+    throw error;
+  }
+};
+
+export const addToFavourites = async (user: string, favoriteBook: object) => {
+  if (!user) {
+    toast.error("Don't found user");
+    return;
+  }
+
+  const userRefId = doc(db, "users", user);
+  try {
+    await updateDoc(userRefId, {
+      favorites: arrayUnion(favoriteBook),
+    });
+    toast.success("Book add to favourites");
+  } catch (error) {
+    console.error("Xəta baş verdi:", error);
+    toast.error("Don't add to favourites");
+  }
+};
+
+export const addToCart = async (user: string, addCartBook: object) => {
+  if (!user) {
+    toast.error("Don't found user");
+    return;
+  }
+
+  const userRefId = doc(db, "users", user);
+  try {
+    await updateDoc(userRefId, {
+      cart: arrayUnion(addCartBook),
+    });
+    toast.success("Book add to favourites");
+  } catch (error) {
+    console.error("Xəta baş verdi:", error);
+    toast.error("Don't add to favourites");
+  }
+};
+
+export const getFavorites = async (userId: string) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      return userData?.favorites || [];
+    } else {
+      console.log("Sənəd tapılmadı.");
+    }
+  } catch (error) {
+    console.error("Xəta baş verdi:", error);
+  }
+};
+
+export const checkUserRole = async (uid: string | undefined) => {
+  try {
+    if (!uid) {
+      toast.error("User ID is undefined");
+      throw new Error("User ID is undefined");
+    }
+    const userRefToAdmin = doc(db, "users", uid);
+    const userSnap = await getDoc(userRefToAdmin);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      if (userData.role === "admin") {
+        toast.success("You have access to the admin panel");
+        return true;
+      } else {
+        toast.error("This user does not have admin permission");
+      }
+    } else {
+      toast.error("Don't found document.");
+    }
+  } catch (error) {
+    toast.error((error as Error).message);
   }
 };

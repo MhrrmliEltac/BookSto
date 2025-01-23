@@ -26,3 +26,19 @@
     background-position: left;
   }
 }
+
+.border-gradient {
+  border: 2px solid #0dd6b8 !important;
+  color: #0dd6b8 !important;
+  background-color: white !important;
+}
+
+@media (min-width: 768px) {
+  .flex-nowrap2 {
+    flex-wrap: nowrap !important;
+  }
+}
+
+.flex-wrap2{
+  flex-wrap: wrap;
+}

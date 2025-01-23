@@ -16,6 +16,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     "/auth/register",
     "/auth/recover-password",
     "/admin/control",
+    "/admin/control/admin-panel",
   ];
 
   const isNavbarVisible = !hideNavbarFooterRoutes.includes(location.pathname);

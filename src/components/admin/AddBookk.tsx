@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addBook } from "../../../utils/firebase";
 import toast from "react-hot-toast";
 import { Button } from "react-bootstrap";
@@ -10,42 +10,64 @@ type Books = {
   description: string;
   genre: string;
   image: string;
+  price: number;
 };
 
 const AddBookk = () => {
-  let id = 14;
-
   const [books, setBooks] = useState<Books>({
-    id: ++id,
+    id: 0,
     author: "",
     book_name: "",
     description: "",
     genre: "",
     image: "",
+    price: 0,
   });
+
+  const [bookId, setBookId] = useState<number>(0);
+
+  useEffect(() => {
+    const savedId = localStorage.getItem("bookId");
+    const newId = savedId ? +savedId : 1; 
+    setBookId(newId);
+  }, []);
 
   const handleAddBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    books.id = ++id;
-    console.log(id, "id", books.id, "books");
     if (
-      books.author !== "" ||
-      books.book_name !== "" ||
-      books.description !== "" ||
-      books.genre !== "" ||
-      books.image !== ""
+      books.author.trim() !== "" &&
+      books.book_name.trim() !== "" &&
+      books.description.trim() !== "" &&
+      books.genre.trim() !== "" &&
+      books.image.trim() !== "" &&
+      books.price > 0
     ) {
-      await addBook(books);
+      await addBook({ ...books, id: bookId });
       toast.success("Kitab əlavə edildi");
+
+      const newId = bookId + 1;
+      setBookId(newId);
+      localStorage.setItem("bookId", newId.toString());
+
+      setBooks({
+        id: newId,
+        author: "",
+        book_name: "",
+        description: "",
+        genre: "",
+        image: "",
+        price: 0,
+      });
     } else {
       toast.error("Bütün xanaları doldurun zəhmət olmasa");
     }
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setBooks({
       ...books,
-      [e.target.name]: e.target.value,
+      [name]: name === "price" ? parseFloat(value) || 0 : value,
     });
   };
 
@@ -55,40 +77,48 @@ const AddBookk = () => {
         className="border-b-2 placeholder:text-slate-500 outline-none"
         type="text"
         name="book_name"
-        id="bookName"
         placeholder="Kitabın adı"
+        value={books.book_name}
         onChange={handleChangeInput}
       />
       <input
         className="border-b-2 placeholder:text-slate-500 outline-none"
         type="text"
         name="author"
-        id="author"
+        placeholder="Müəllifin adı"
+        value={books.author}
         onChange={handleChangeInput}
-        placeholder="Müəəlifin adı"
       />
       <input
         className="border-b-2 placeholder:text-slate-500 outline-none"
         type="text"
         name="description"
-        id="description"
-        onChange={handleChangeInput}
         placeholder="Kitabın təsviri"
+        value={books.description}
+        onChange={handleChangeInput}
       />
       <input
         className="border-b-2 placeholder:text-slate-500 outline-none"
         type="text"
         name="image"
-        id="image_url"
-        onChange={handleChangeInput}
         placeholder="Kitabın şəkli"
+        value={books.image}
+        onChange={handleChangeInput}
       />
       <input
         className="border-b-2 placeholder:text-slate-500 outline-none"
         type="text"
         name="genre"
-        id="genre"
         placeholder="Janr"
+        value={books.genre}
+        onChange={handleChangeInput}
+      />
+      <input
+        className="border-b-2 placeholder:text-slate-500 outline-none"
+        type="number"
+        name="price"
+        placeholder="Qiymət"
+        value={books.price}
         onChange={handleChangeInput}
       />
       <Button type="submit" onClick={handleAddBook} variant="success">

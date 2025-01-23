@@ -4,6 +4,8 @@ import Heading from "../general/Heading";
 import BasicButton from "../general/Button";
 import FeaturedWriter from "./FeaturedWriter";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import ShortenedText from "../general/ShortenedText";
 
 interface Writer {
   image: string;
@@ -15,6 +17,7 @@ interface Writer {
 const FeaturedBooks = () => {
   const [sliceData, setSliceData] = useState<object[] | null>(null);
   const [writerData, setWriterData] = useState<Writer[] | null>(null);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const bookData = await getBookData();
@@ -27,14 +30,18 @@ const FeaturedBooks = () => {
     setWriterData(response.data);
   };
 
+  const handleBookDetail = (id: number) => {
+    navigate(`/books/book-detail/${id}`);
+  };
+
   useEffect(() => {
     fetchData();
     getWriterData();
   }, []);
 
   return (
-    <div className="w-[100%] flex  justify-between my-10 gap-10 flex-wrap md:flex-nowrap">
-      <div className="flex flex-col md:w-1/2 w-full bg-white p-4 rounded-lg h-fit">
+    <div className="w-[100%] flex  justify-between my-10 gap-3 flex-wrap2 flex-nowrap2">
+      <div className="flex flex-col lg:w-1/2 w-full bg-white p-4 rounded-lg h-fit">
         <Heading text="Featured Books" select />
         {sliceData &&
           sliceData.map((book: any) => (
@@ -43,15 +50,22 @@ const FeaturedBooks = () => {
                 <img src={book.image} alt="" className="rounded-lg" />
               </div>
               <div className="w-1/2">
-                <p className="text-3xl font-bold">{book.book_name}</p>
-                <p className="text-[#6E7990]">Author: {book.author}</p>
-                <p>{book.description} </p>
-                <BasicButton text="Learn More" />
+                <p className="md:text-3xl text-sm font-bold">
+                  {book.book_name}
+                </p>
+                <p className="text-[#6E7990] text-sm">Author: {book.author}</p>
+                <div className="text-xs">
+                  <ShortenedText text={book.description} length={100} />{" "}
+                </div>
+                <BasicButton
+                  onClick={() => handleBookDetail(book.id)}
+                  text="Learn More"
+                />
               </div>
             </div>
           ))}
       </div>
-      <div className="flex flex-col md:w-1/2 w-full bg-white p-4 rounded-lg h-[300px] md:h-full">
+      <div className="flex flex-col lg:w-1/2 w-full bg-white p-4 rounded-lg">
         <Heading text="Featured Writer" select />
         <FeaturedWriter writerData={writerData} />
       </div>

@@ -4,42 +4,57 @@ import ShortenedText from "../general/ShortenedText";
 import { FaHeart } from "react-icons/fa";
 import { CiShoppingBasket } from "react-icons/ci";
 import Rating from "../general/Rating";
-import { pagination } from "../../../utils/firebase";
+import { addToFavourites, pagination } from "../../../utils/firebase";
 import ContentLoader from "react-content-loader";
+import { useNavigate, useSearchParams } from "react-router";
+import { useAppSelector } from "../../hook/hooks";
+import toast from "react-hot-toast";
 
-const Books = ({ allBookData }: any) => {
+const Books = ({ allBookData, pageLength }: any) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = Number(searchParams.get("page")) || 1;
+  const [page, setPage] = useState(initialPage);
   const [books, setBooks] = useState<any[]>([]);
   const [lastDoc, setLastDoc] = useState<any>(null);
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState<boolean>(true); 
-  const pageSize = 8;
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isToken, setIsToken] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+  const user = useAppSelector((state: any) => state.auth.user);
+  const pageSize: number = pageLength;
 
   const totalPages = allBookData?.length
     ? Math.ceil(allBookData.length / pageSize)
     : 1;
 
   const fetchBooks = async (pageNumber: number) => {
-    setIsLoading(true); 
-    if (pageNumber === 1) {
-      setLastDoc(null);
-    }
+    setIsLoading(true);
+
+    if (pageNumber === 1) setLastDoc(null);
 
     const result = await pagination(
       pageSize,
       pageNumber === 1 ? null : lastDoc
     );
-    const { books: newBooks, lastDoc: newLastDoc } = result;
 
+    const { books: newBooks, lastDoc: newLastDoc } = result;
     setBooks(newBooks);
     setLastDoc(newLastDoc);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    setIsLoading(false);
   };
 
   useEffect(() => {
+    if (user && user.user?.providerData.length > 0) {
+      setIsToken(true);
+    } else {
+      setIsToken(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    setSearchParams({ page: page.toString() });
     fetchBooks(page);
-  }, [page]);
+  }, [page, setSearchParams]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -47,6 +62,18 @@ const Books = ({ allBookData }: any) => {
   ) => {
     event.preventDefault();
     setPage(value);
+  };
+
+  const handleBookDetail = (id: number) => {
+    navigate(`/books/book-detail/${id}`);
+  };
+
+  const addFavoriteSlice = async (books: any) => {
+    if (isToken) {
+      await addToFavourites(user?.user.uid, books);
+    } else {
+      toast.error("Please, sign in or sign up");
+    }
   };
 
   const SkeletonLoader = () => (
@@ -74,7 +101,7 @@ const Books = ({ allBookData }: any) => {
           : books.map((item: any) => (
               <div
                 key={item.id}
-                className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center"
+                className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center relative z-0"
               >
                 <div className="relative group cursor-pointer">
                   <img
@@ -82,8 +109,11 @@ const Books = ({ allBookData }: any) => {
                     alt="Book's image"
                     className="w-28 h-44 rounded-lg group-hover:opacity-70 transition-all duration-300"
                   />
-                  <div className="absolute top-[0%] left-0 hidden group-hover:flex w-28 h-44 rounded-lg items-center justify-center z-10 transition-all duration-300 bg-[rgba(0,0,0,0.5)]">
-                    <button className="bg-[#fff] rounded-md w-[90%] p-2 hover:bg-[#0DD6B8] transition-all duration-300 hover:text-white text-[#0DD6B8] text-sm">
+                  <div className="absolute top-0 left-0 hidden group-hover:flex w-28 h-44 rounded-lg items-center justify-center z-10 transition-all duration-300 bg-[rgba(0,0,0,0.5)]">
+                    <button
+                      onClick={() => handleBookDetail(item.id)}
+                      className="bg-[#fff] rounded-md w-[90%] p-2 hover:bg-[#0DD6B8] transition-all duration-300 hover:text-white text-[#0DD6B8] text-sm"
+                    >
                       View Book
                     </button>
                   </div>
@@ -91,21 +121,24 @@ const Books = ({ allBookData }: any) => {
                 <div className="w-full mt-2">
                   <div className="flex justify-between mb-2 flex-col">
                     <div>
-                      <h4 className="mb-1 overflow-hidden text-[18px] font-semibold">
+                      <h4 className="mb-1 text-[18px] font-semibold">
                         <ShortenedText text={item.book_name} />
                       </h4>
-                      <p className="text-[#0DD6B8] text-[12px] w-full mb-0">
+                      <div className="text-[#0DD6B8] text-[12px]">
                         <ShortenedText text={item.author} />
-                      </p>
+                      </div>
                     </div>
                     <Rating />
                   </div>
                   <div className="flex justify-between items-center">
-                    <p className="text-[#000] font-bold mt-1 mb-0">
+                    <p className="text-black font-bold mt-1 mb-0">
                       ${item.price}
                     </p>
-                    <div className="flex gap-2 ">
-                      <FaHeart className="w-7 h-7 cursor-pointer border p-1 rounded-lg bg-[#FBDDDD] text-[#EB5757]" />
+                    <div className="flex gap-2">
+                      <FaHeart
+                        onClick={() => addFavoriteSlice(item)}
+                        className="w-7 h-7 cursor-pointer border p-1 rounded-lg bg-[#FBDDDD] text-[#EB5757]"
+                      />
                       <CiShoppingBasket className="w-7 h-7 cursor-pointer border p-1 rounded-lg bg-[#CFF7F1] text-[#0DD6B8]" />
                     </div>
                   </div>

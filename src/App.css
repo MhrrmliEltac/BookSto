@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
 *,
 *::before,
 *::after {
@@ -41,8 +42,6 @@
   justify-content: center;
 }
 
-
-
 .swiper-slide img {
   width: 200px;
   height: 300px;
@@ -66,4 +65,9 @@
     width: 28rem !important;
     height: 36rem !important;
   }
+}
+.playwrite-in {
+  font-family: "Playwrite IN", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
 }

@@ -4,11 +4,10 @@ import { FaRegUserCircle, FaUser } from "react-icons/fa";
 import { LuSquareUserRound } from "react-icons/lu";
 import { FaUserEdit } from "react-icons/fa";
 import { LuLockKeyhole } from "react-icons/lu";
-import { useAppDispatch, useAppSelector } from "../../hook/hooks";
+import { useAppSelector } from "../../hook/hooks";
 import { Button } from "@mui/material";
 import BasicButton from "../general/Button";
 import { GoSignOut } from "react-icons/go";
-import toast from "react-hot-toast";
 import { signOut } from "../../../utils/firebase";
 
 type User = {
@@ -22,12 +21,12 @@ const User = () => {
   const handleShowMenu = useCallback(() => {
     setShowMenu(!showMenu);
   }, [showMenu]);
-  const user = useAppSelector((state) => state.auth.user);
-  const [userData, setUserData] = useState<User>({
+  const user = useAppSelector((state: any) => state.auth.user);
+  const userData = {
     displayName: user?.user?.displayName,
     photoURL: user?.user?.photoURL,
     email: user?.user?.email,
-  });
+  };
   const signOutFunc = async () => {
     await signOut();
     setTimeout(() => {
@@ -91,7 +90,7 @@ const User = () => {
           aria-labelledby="user-menu-button"
         >
           <div className="bg-[#0DD6B8] p-3 rounded-lg rounded-b-none">
-            <h4 className="text-white">Hello Barry Tech</h4>
+            <h4 className="text-white">Hello {userData.displayName}</h4>
             <span className="text-white">Available</span>
           </div>
           <ul className="flex flex-col py-3 gap-4">
