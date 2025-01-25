@@ -53,6 +53,7 @@ const BookDetail = () => {
                     className="w-[30rem] h-[650px] rounded-lg"
                     src={detail.image}
                     alt=""
+                    loading="lazy"
                   />
                 </div>
                 <div className="md:w-1/2 w-full flex flex-col">
@@ -94,8 +95,7 @@ const BookDetail = () => {
                       <button
                         className="rounded-lg bg-blue-500 px-4 text-white py-1 text-sm"
                         onClick={() =>
-                          textArea &&
-                          addReviewPost({ comment: [textArea] })
+                          textArea && addReviewPost({ comment: [textArea] })
                         }
                       >
                         Send
