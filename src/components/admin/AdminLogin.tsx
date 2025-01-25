@@ -1,6 +1,5 @@
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { checkUserRole, signIn } from "../../../utils/firebase";
-import { useState } from "react";
 import { useNavigate } from "react-router";
 
 interface Values {
@@ -9,7 +8,6 @@ interface Values {
 }
 
 const AdminLogin = () => {
-  const [uid, setUid] = useState<string | undefined>("");
   const navigate = useNavigate();
 
   return (
@@ -44,8 +42,8 @@ const AdminLogin = () => {
         ) => {
           setTimeout(async () => {
             const user = await signIn(values.email, values.password);
-            setUid(user?.user.uid);
-            const isAdmin = await checkUserRole(uid);
+            let userUid: string | undefined = user?.user.uid;
+            const isAdmin = await checkUserRole(userUid || "");
             if (isAdmin) {
               localStorage.setItem("isAdmin", JSON.stringify(isAdmin));
               navigate("/admin/control/admin-panel");

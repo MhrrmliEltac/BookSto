@@ -289,7 +289,7 @@ export const getFavorites = async (userId: string) => {
   }
 };
 
-export const checkUserRole = async (uid: string | undefined) => {
+export const checkUserRole = async (uid: string) => {
   try {
     if (!uid) {
       toast.error("User ID is undefined");
