@@ -291,10 +291,6 @@ export const getFavorites = async (userId: string) => {
 
 export const checkUserRole = async (uid: string) => {
   try {
-    if (!uid) {
-      toast.error("User ID is undefined");
-      throw new Error("User ID is undefined");
-    }
     const userRefToAdmin = doc(db, "users", uid);
     const userSnap = await getDoc(userRefToAdmin);
     if (userSnap.exists()) {
