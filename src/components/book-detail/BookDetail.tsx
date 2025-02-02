@@ -25,9 +25,6 @@ const BookDetail = () => {
     }
   };
 
-  const addReviewPost = async (comment: CommentType) => {
-    await addReview(comment);
-  };
   const handleChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
     setTextArea(e.target.value);
@@ -60,7 +57,7 @@ const BookDetail = () => {
                   <div className="flex flex-col gap-2">
                     <h4 className="font-semibold">{detail.book_name}</h4>
                     <h5>${detail.price}</h5>
-                    <BasicRating />
+                    <BasicRating bookId={detail.id} />
                     <div className="mb-0">
                       <ShortenedText text={detail.description} length={247} />
                     </div>
@@ -92,12 +89,7 @@ const BookDetail = () => {
                       value={textArea}
                     ></textarea>
                     <div>
-                      <button
-                        className="rounded-lg bg-blue-500 px-4 text-white py-1 text-sm"
-                        onClick={() =>
-                          textArea && addReviewPost({ comment: [textArea] })
-                        }
-                      >
+                      <button className="rounded-lg bg-blue-500 px-4 text-white py-1 text-sm">
                         Send
                       </button>
                     </div>

@@ -1,13 +1,13 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Swiper as SwiperClass } from "swiper";
 import { getBookData } from "../../../utils/firebase";
-import ContentLoader from "react-content-loader";
+import SkeletonLoader from "./SkeletonLoader";
 
 function SwiperComp() {
   const swiperRef = useRef<SwiperClass | null>(null);
-  const [img, setImg] = useState<object[] | null>(null);
+  const [img, setImg] = useState<object[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const getData = async () => {
@@ -18,22 +18,15 @@ function SwiperComp() {
     }, 2000);
   };
 
+  const memoizedImg = useMemo(() => img, [img]);
+
+  const handleNextSlide = useCallback(() => {
+    swiperRef.current?.slideNext();
+  }, [swiperRef]);
+
   useEffect(() => {
     getData();
   }, []);
-
-  const SkeletonLoader = () => (
-    <ContentLoader
-      speed={2}
-      width={200}
-      height={300}
-      viewBox="0 0 150 200"
-      backgroundColor="#f3f3f3"
-      foregroundColor="#ecebeb"
-    >
-      <rect x="0" y="0" rx="10" ry="10" width="200" height="300" />
-    </ContentLoader>
-  );
 
   return (
     <Swiper
@@ -58,13 +51,15 @@ function SwiperComp() {
               <SkeletonLoader />
             </SwiperSlide>
           ))
-        : img &&
-          img.map((item: any) => (
-            <SwiperSlide
-              key={item.id}
-              onClick={() => swiperRef.current && swiperRef.current.slideNext()}
-            >
-              <img src={item.image} alt="slide_image" />
+        : memoizedImg &&
+          memoizedImg.map((item: any) => (
+            <SwiperSlide key={item.id} onClick={handleNextSlide}>
+              <img
+                src={item.image}
+                alt="slide_image"
+                loading="lazy"
+                decoding="async"
+              />
             </SwiperSlide>
           ))}
     </Swiper>

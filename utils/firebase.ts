@@ -114,8 +114,6 @@ export const recoverPass = async (email: string) => {
   }
 };
 
-//? READ DATA
-
 export const getBookData = async () => {
   let bookArr: object[] = [];
   const data = await getDocs(booksRef)
@@ -134,13 +132,6 @@ export const getBookData = async () => {
   return bookArr;
 };
 
-//? WRITE DATA
-
-export interface Review {
-  comment?: string[] | undefined;
-  rating?: number | undefined;
-}
-
 export interface Book {
   id: number;
   author: string;
@@ -152,15 +143,33 @@ export interface Book {
   price: number;
 }
 
-export const addReview = async ({ comment }: Review): Promise<void> => {
+interface Review {
+  comment?: string;
+  rating?: [] | number[] | undefined;
+}
+
+//? --> Tomorrow add comment
+
+export const addReview = async (
+  { comment, rating }: Review,
+  Id: number
+): Promise<void> => {
   try {
-    const bookRef = doc(db, "books", "062b6ce859c");
+    if (!Id) {
+      throw new Error("Book ID is undefined or invalid");
+    }
+
+    const bookId = Id.toString();
+
+    const bookRef = doc(db, "books", bookId);
+
     await updateDoc(bookRef, {
-      review: arrayUnion({ comment: comment }),
+      review: { rating: rating ? arrayUnion(...rating) : [] },
     });
+
     toast.success("Review added successfully");
   } catch (error) {
-    toast.error((error as Error).message);
+    toast.error(`Error adding review: ${(error as Error).message}`);
   }
 };
 

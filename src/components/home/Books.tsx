@@ -101,6 +101,7 @@ const Books = ({ allBookData, pageLength }: any) => {
                     src={item.image}
                     alt="Book's image"
                     className="w-28 h-44 rounded-lg group-hover:opacity-70 transition-all duration-300"
+                    loading="lazy"
                   />
                   <div className="absolute top-0 left-0 hidden group-hover:flex w-28 h-44 rounded-lg items-center justify-center z-10 transition-all duration-300 bg-[rgba(0,0,0,0.5)]">
                     <button
@@ -121,7 +122,7 @@ const Books = ({ allBookData, pageLength }: any) => {
                         <ShortenedText text={item.author} />
                       </div>
                     </div>
-                    <Rating />
+                    <Rating bookId={item.id} />
                   </div>
                   <div className="flex justify-between items-center">
                     <p className="text-black font-bold mt-1 mb-0">
