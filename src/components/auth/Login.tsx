@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../hook/hooks";
 import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { BiShow } from "react-icons/bi";
+import logo from "../../assets/images/logo.png";
 
 const Login = () => {
   const [validated, setValidated] = useState(false);
@@ -74,11 +75,7 @@ const Login = () => {
     >
       <Row className="mb-3 mt-3 flex-column gap-4 bg-white p-4 lg:w-[25%] md:w-[50%] w-[80%] rounded-3">
         <div className="flex justify-center">
-          <img
-            src="/logo (1).png"
-            className="w-30 h-10"
-            alt="Not a found logo"
-          />
+          <img src={logo} className="w-30 h-10" alt="Not a found logo" />
         </div>
         <div className="fs-2 flex justify-center text-[#0DD6B8]">Sign In</div>
         <Form.Group as={Col} controlId="validationCustom01">

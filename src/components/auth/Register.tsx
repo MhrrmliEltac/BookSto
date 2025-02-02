@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router";
 import { signUp } from "../../../utils/firebase";
 import { BiShow } from "react-icons/bi";
 import { BeatLoader } from "react-spinners";
+import logo from "../../assets/images/logo.png";
 
 const Register = () => {
   const [validated, setValidated] = useState(false);
@@ -62,17 +63,13 @@ const Register = () => {
     <Form
       noValidate
       validated={validated}
-      className="vh-100 overflow-hidden d-flex flex-column justify-content-center w-100 align-items-center"
+      className="vh-100 overflow-hidden d-flex flex-column justify-content-center align-items-center"
       onSubmit={handleSubmit}
       style={{ backgroundColor: "#0DD6B8" }}
     >
-      <Row className="mb-3 flex-column gap-4 bg-white p-4 w-25 rounded-3">
+      <Row className="mb-3 mt-3 flex-column gap-4 bg-white p-4 lg:w-[25%] md:w-[50%] w-[80%] rounded-3">
         <div className="flex justify-center">
-          <img
-            src="/logo (1).png"
-            className="w-30 h-10"
-            alt="Not a found logo"
-          />
+          <img src={logo} className="w-30 h-10" alt="Not a found logo" />
         </div>
         <p className="fs-2 text-center" style={{ color: "#0DD6B8" }}>
           Sign Up

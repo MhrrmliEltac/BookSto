@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { recoverPass } from "../../../utils/firebase";
+import logo from "../../assets/images/logo.png";
 
 const RecoverPass = () => {
   const [validated, setValidated] = useState(false);
@@ -27,7 +28,6 @@ const RecoverPass = () => {
     [email]
   );
 
-
   return (
     <Form
       noValidate
@@ -38,11 +38,7 @@ const RecoverPass = () => {
     >
       <Row className="mb-3 flex-column gap-4 bg-white p-4 lg:w-[40%] w-[80%] rounded-3">
         <div className="flex justify-center">
-          <img
-            src="/logo (1).png"
-            className="w-25 h-15"
-            alt="Not a found logo"
-          />
+          <img src={logo} className="w-25 h-15" alt="Not a found logo" />
         </div>
         <div>
           <p className="fs-2 mb-0" style={{ color: "#0DD6B8" }}>
