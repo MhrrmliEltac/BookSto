@@ -68,11 +68,11 @@ const Login = () => {
     <Form
       noValidate
       validated={validated}
-      className="vh-100 overflow-hidden d-flex flex-column justify-content-center w-100 align-items-center"
+      className="vh-100 overflow-hidden d-flex flex-column justify-content-center align-items-center"
       onSubmit={handleSubmit}
       style={{ backgroundColor: "#0DD6B8" }}
     >
-      <Row className="mb-3 flex-column gap-4 bg-white p-4 lg:w-[25%] w-[50%] rounded-3">
+      <Row className="mb-3 mt-3 flex-column gap-4 bg-white p-4 lg:w-[25%] md:w-[50%] w-[80%] rounded-3">
         <div className="flex justify-center">
           <img
             src="/logo (1).png"

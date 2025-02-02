@@ -4,7 +4,7 @@ import { fetchCartLength } from "../redux/slice/count";
 import { SlBasket } from "react-icons/sl";
 
 interface AddToCart {
-  onClick: () => void;
+  onClick: (url: string) => void;
 }
 
 const AddToCart: React.FC<AddToCart> = ({ onClick }) => {
@@ -27,7 +27,7 @@ const AddToCart: React.FC<AddToCart> = ({ onClick }) => {
         <SlBasket
           size={18}
           className="hover:text-green-500 cursor-pointer transition-all duration-200"
-          onClick={onClick}
+          onClick={() => onClick("checkout")}
         />
       </div>
     </div>

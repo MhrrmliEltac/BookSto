@@ -9,11 +9,9 @@ import ResponsiveSearch from "./ResponsiveSearch";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const navigateToWishlist = () => {
-    navigate("/wishlist");
-  };
-  const navigateToCheckOut = () => {
-    navigate("/checkout");
+  
+  const navigateTo = (url: string) => {
+    navigate(`/${url}`);
   };
 
   return (
@@ -29,8 +27,8 @@ const Navbar = () => {
           <div className="md:hidden flex items-center justify-center m-0 p-0">
             <ResponsiveSearch />
           </div>
-          <Wishlist onClick={navigateToWishlist} icon={MdFavoriteBorder} />
-          <AddToCart onClick={navigateToCheckOut} />
+          <Wishlist onClick={navigateTo} icon={MdFavoriteBorder} />
+          <AddToCart onClick={navigateTo} />
           <User />
         </div>
       </div>

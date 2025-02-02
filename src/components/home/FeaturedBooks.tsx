@@ -56,16 +56,17 @@ const FeaturedBooks = () => {
                 <img src={book.image} alt="" className="rounded-lg" />
               </div>
               <div className="w-1/2">
-                <p className="md:text-3xl text-sm font-bold">
+                <p className="md:text-2xl text-xl font-bold">
                   {book.book_name}
                 </p>
                 <p className="text-[#6E7990] text-sm">Author: {book.author}</p>
-                <div className="text-xs">
+                <div className="text-xs md:mb-5 mb-3">
                   <ShortenedText text={book.description} length={100} />{" "}
                 </div>
                 <BasicButton
                   onClick={() => handleBookDetail(book.id)}
                   text="Learn More"
+                  small
                 />
               </div>
             </div>

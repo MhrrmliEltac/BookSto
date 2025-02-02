@@ -3,6 +3,8 @@ import { deleteBookIdFromCart, getCartBook } from "../../../utils/firebase";
 import { useAppSelector } from "../../hook/hooks";
 import SkeletonLoader from "../general/SkeletonLoader";
 import ItemCard from "../general/ItemCard";
+import PaymentDetail from "./PaymentDetail";
+import BasicButton from "../general/Button";
 
 const CheckOutItem = () => {
   const [cartBook, setCartBook] = useState<object[] | []>([]);
@@ -13,7 +15,7 @@ const CheckOutItem = () => {
     setCartBook(response);
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
   };
 
   const handleAction = async (bookId: string) => {
@@ -53,9 +55,9 @@ const CheckOutItem = () => {
           </>
         ))
       )}
-      <div className="flex justify-between items-center text-2xl p-4">
-        <p className="font-bold">Total price:</p>
-        <span className="text-[#0DD6B8] font-bold">{totalPrice}$</span>
+      <PaymentDetail totalPrice={totalPrice} />
+      <div className="flex justify-end">
+        <BasicButton text="Accept" check />
       </div>
     </div>
   );
