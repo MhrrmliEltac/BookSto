@@ -41,7 +41,6 @@ function SwiperComp() {
       grabCursor={true}
       centeredSlides={true}
       loop={true}
-      slidesPerView={5}
       coverflowEffect={{
         rotate: 0,
         stretch: 0,
@@ -51,16 +50,15 @@ function SwiperComp() {
       modules={[EffectCoverflow]}
       className="swiper_container"
       onSwiper={(swiper) => (swiperRef.current = swiper)}
+      slidesPerView={5}
     >
       {loading
-        ? // Skeletons shown while loading
-          Array.from({ length: 15 }).map((_, index) => (
+        ? Array.from({ length: 15 }).map((_, index) => (
             <SwiperSlide key={index}>
               <SkeletonLoader />
             </SwiperSlide>
           ))
-        : 
-          img &&
+        : img &&
           img.map((item: any) => (
             <SwiperSlide
               key={item.id}

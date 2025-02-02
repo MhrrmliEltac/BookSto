@@ -66,14 +66,22 @@ const User = () => {
         <div className="flex gap-2 items-center">
           <Button
             href="/auth/login"
-            style={{ backgroundColor: "#0DD6B8", color: "white" }}
+            style={{
+              backgroundColor: "#0DD6B8",
+              color: "white",
+              fontSize: "10px",
+            }}
             color="success"
           >
             Sign In
           </Button>
           <Button
             href="/auth/register"
-            style={{ backgroundColor: "#0DD6B8", color: "white" }}
+            style={{
+              backgroundColor: "#0DD6B8",
+              color: "white",
+              fontSize: "10px",
+            }}
             color="success"
           >
             Sign Up

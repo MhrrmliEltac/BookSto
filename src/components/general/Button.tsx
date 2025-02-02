@@ -8,6 +8,7 @@ interface BtnProps {
   green?: boolean;
   white?: boolean;
   check?: boolean;
+  search?: boolean;
 }
 
 const BasicButton: React.FC<BtnProps> = ({
@@ -18,6 +19,7 @@ const BasicButton: React.FC<BtnProps> = ({
   green,
   white,
   check,
+  search,
 }) => {
   return (
     <Button
@@ -35,9 +37,14 @@ const BasicButton: React.FC<BtnProps> = ({
         small && "md:w-32"
       } ${green && "bg-[#0DD6B8]"} ${white && "border-gradient"} ${
         check && "w-full"
-      }`}
+      }
+      ${search && "md:w-20"}`}
     >
-      <p className="mb-0 md:text-lg text-[10px]">{text}</p>
+      <p
+        className={`mb-0 md:text-lg text-[10px] ${search && "md:text-[12px]"}`}
+      >
+        {text}
+      </p>
       {Icon && <Icon size={25} />}
     </Button>
   );

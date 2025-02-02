@@ -12,12 +12,14 @@ import {
   arrayUnion,
   collection,
   doc,
+  endAt,
   getDoc,
   getDocs,
   getFirestore,
   limit,
   setDoc,
   startAfter,
+  startAt,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -388,4 +390,27 @@ export const getWriterData = async () => {
     });
   writerData = writerArr;
   return writerData;
+};
+
+export const searchBooksByPartialTitle = async (searchText: string) => {
+  if (!searchText.trim()) return [];
+  try {
+    const q = query(
+      booksRef,
+      orderBy("book_name"),
+      startAt(searchText),
+      endAt(searchText + "\uf8ff")
+    );
+
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return snapshot.docs.map((doc) => ({
+        id: doc.id,
+        book_name: doc.data().book_name,
+        image: doc.data().image,
+      }));
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
