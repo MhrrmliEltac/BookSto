@@ -5,11 +5,15 @@ import User from "./User";
 import logo from "../../assets/images/logo.png";
 import Wishlist from "./Wishlisth";
 import { MdFavoriteBorder } from "react-icons/md";
+import ResponsiveSearch from "./ResponsiveSearch";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const navigateToWishlist = () => {
     navigate("/wishlist");
+  };
+  const navigateToCheckOut = () => {
+    navigate("/checkout");
   };
 
   return (
@@ -22,8 +26,11 @@ const Navbar = () => {
           <Seacrh />
         </div>
         <div className="flex gap-2 items-center">
+          <div className="md:hidden flex items-center justify-center m-0 p-0">
+            <ResponsiveSearch />
+          </div>
           <Wishlist onClick={navigateToWishlist} icon={MdFavoriteBorder} />
-          <AddToCart />
+          <AddToCart onClick={navigateToCheckOut} />
           <User />
         </div>
       </div>

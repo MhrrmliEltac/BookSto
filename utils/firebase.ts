@@ -36,8 +36,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-const db = getFirestore(app);
+export const db = getFirestore(app);
 let userId: number = 3;
+const booksRef = collection(db, "books");
 
 export const signUp = async (
   email: string,
@@ -111,8 +112,6 @@ export const recoverPass = async (email: string) => {
 };
 
 //? READ DATA
-
-const booksRef = collection(db, "books");
 
 export const getBookData = async () => {
   let bookArr: object[] = [];
@@ -267,10 +266,10 @@ export const addToCart = async (user: string, addCartBook: object) => {
     await updateDoc(userRefId, {
       cart: arrayUnion(addCartBook),
     });
-    toast.success("Book add to favourites");
+    toast.success("Book add to cart");
   } catch (error) {
     console.error("Xəta baş verdi:", error);
-    toast.error("Don't add to favourites");
+    toast.error("Don't add to cart");
   }
 };
 
@@ -282,10 +281,73 @@ export const getFavorites = async (userId: string) => {
       const userData = userSnap.data();
       return userData?.favorites || [];
     } else {
-      console.log("Sənəd tapılmadı.");
+      console.log("Don't found document.");
     }
   } catch (error) {
-    console.error("Xəta baş verdi:", error);
+    console.error("Error:", error);
+  }
+};
+
+export const getCartBook = async (userId: string) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      return userData?.cart || [];
+    } else {
+      console.log("Don't found document.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+export const deleteBookByIdFromFavorite = async (
+  userId: string,
+  bookId: number
+) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const favorite = userDoc.data().favorites || [];
+
+      const updateFavorites = favorite.filter(
+        (book: any) => book.id !== bookId
+      );
+
+      await updateDoc(userRef, {
+        favorites: updateFavorites,
+      });
+
+      toast.success("Remove book");
+    }
+  } catch (error) {
+    console.error("Error removing book from favorites:", error);
+    toast.error("Error delete book from favorites");
+  }
+};
+
+export const deleteBookIdFromCart = async (userId: string, bookId: number) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const cart = userDoc.data().cart || [];
+      const updateCart = cart.filter((book: any) => book.id !== bookId);
+
+      await updateDoc(userRef, {
+        cart: updateCart,
+      });
+
+      toast.success("Remove book");
+    }
+  } catch (error) {
+    console.error("Error delete book from cart:", error);
+    toast.error("Error delete book from cart");
   }
 };
 

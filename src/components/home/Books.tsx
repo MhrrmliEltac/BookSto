@@ -4,14 +4,21 @@ import ShortenedText from "../general/ShortenedText";
 import { FaHeart } from "react-icons/fa";
 import { CiShoppingBasket } from "react-icons/ci";
 import Rating from "../general/Rating";
-import { addToFavourites, pagination } from "../../../utils/firebase";
-import ContentLoader from "react-content-loader";
+import {
+  addToCart,
+  addToFavourites,
+  pagination,
+} from "../../../utils/firebase";
 import { useNavigate, useSearchParams } from "react-router";
-import { useAppSelector } from "../../hook/hooks";
+import { useAppDispatch, useAppSelector } from "../../hook/hooks";
 import toast from "react-hot-toast";
+import SkeletonLoader from "../general/SkeletonLoader";
+import { fetchCartLength } from "../redux/slice/count";
+
+type ActionFnType = (userId: string, book: any) => Promise<void>;
 
 const Books = ({ allBookData, pageLength }: any) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const initialPage = Number(searchParams.get("page")) || 1;
   const [page, setPage] = useState(initialPage);
   const [books, setBooks] = useState<any[]>([]);
@@ -20,6 +27,7 @@ const Books = ({ allBookData, pageLength }: any) => {
   const [isToken, setIsToken] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state: any) => state.auth.user);
   const pageSize: number = pageLength;
 
@@ -27,33 +35,26 @@ const Books = ({ allBookData, pageLength }: any) => {
     ? Math.ceil(allBookData.length / pageSize)
     : 1;
 
-  const fetchBooks = async (pageNumber: number) => {
+  const fetchBooks = async (pageNumber: number): Promise<void> => {
     setIsLoading(true);
-
     if (pageNumber === 1) setLastDoc(null);
 
     const result = await pagination(
       pageSize,
       pageNumber === 1 ? null : lastDoc
     );
-
-    const { books: newBooks, lastDoc: newLastDoc } = result;
-    setBooks(newBooks);
-    setLastDoc(newLastDoc);
+    setBooks(result.books);
+    setLastDoc(result.lastDoc);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    if (user && user.user?.providerData.length > 0) {
-      setIsToken(true);
-    } else {
-      setIsToken(false);
-    }
+    setIsToken(!!(user && user.user?.providerData.length > 0));
   }, [user]);
 
   useEffect(() => {
     fetchBooks(page);
-  }, [page, setSearchParams]);
+  }, [page]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -67,28 +68,21 @@ const Books = ({ allBookData, pageLength }: any) => {
     navigate(`/books/book-detail/${id}`);
   };
 
-  const addFavoriteSlice = async (books: any) => {
+  const handleAction = async (actionFn: ActionFnType, book: any) => {
     if (isToken) {
-      await addToFavourites(user?.user.uid, books);
+      try {
+        await actionFn(user?.user.uid, book);
+        if (actionFn === addToCart) {
+          dispatch(fetchCartLength(user?.user.uid));
+        }
+      } catch (error) {
+        console.error("Error in handleAction:", error);
+        toast.error("Something went wrong. Please try again.");
+      }
     } else {
       toast.error("Please, sign in or sign up");
     }
   };
-
-  const SkeletonLoader = () => (
-    <ContentLoader
-      speed={2}
-      width={200}
-      height={300}
-      viewBox="0 0 200 300"
-      backgroundColor="#f3f3f3"
-      foregroundColor="#ecebeb"
-    >
-      <rect x="0" y="0" rx="10" ry="10" width="200" height="250" />
-      <rect x="0" y="260" rx="5" ry="5" width="150" height="20" />
-      <rect x="0" y="290" rx="5" ry="5" width="100" height="15" />
-    </ContentLoader>
-  );
 
   return (
     <div className="pt-4 w-[80%] md:w-full mx-auto">
@@ -135,10 +129,13 @@ const Books = ({ allBookData, pageLength }: any) => {
                     </p>
                     <div className="flex gap-2">
                       <FaHeart
-                        onClick={() => addFavoriteSlice(item)}
+                        onClick={() => handleAction(addToFavourites, item)}
                         className="w-7 h-7 cursor-pointer border p-1 rounded-lg bg-[#FBDDDD] text-[#EB5757]"
                       />
-                      <CiShoppingBasket className="w-7 h-7 cursor-pointer border p-1 rounded-lg bg-[#CFF7F1] text-[#0DD6B8]" />
+                      <CiShoppingBasket
+                        onClick={() => handleAction(addToCart, item)}
+                        className="w-7 h-7 cursor-pointer border p-1 rounded-lg bg-[#CFF7F1] text-[#0DD6B8]"
+                      />
                     </div>
                   </div>
                 </div>

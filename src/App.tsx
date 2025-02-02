@@ -17,6 +17,7 @@ import Wishlist from "./components/wishlist/Wishlist";
 import AdminPanel from "./components/admin/AdminPanel";
 import AddBookk from "./components/admin/AddBookk";
 import PrivateRoute from "./components/private/PrivateRoutes";
+import CheckOut from "./components/checkout/CheckOut";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/books/book-detail/:id" element={<BookDetail />} />
               <Route path="/books" element={<BookList />} />
               <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/checkout" element={<CheckOut />} />
             </Routes>
           </Layout>
         </BrowserRouter>

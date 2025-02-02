@@ -84,7 +84,7 @@ const User = () => {
       {showMenu && (
         <div
           className="absolute -right-10 z-10 mt-2
-          w-96 rounded-lg bg-white flex flex-col shadow-lg ring-1  focus:outline-none"
+          w-96 rounded-lg bg-white flex flex-col shadow-lg ring-1  focus:outline-none overflow-auto"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"

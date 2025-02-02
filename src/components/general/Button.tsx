@@ -29,11 +29,11 @@ const BasicButton: React.FC<BtnProps> = ({
         alignItems: "center",
         justifyContent: "center",
       }}
-      className={`md:py-3 md:px-4 py-2 px-2 flex items-center text-lg md:w-44 w-32 font-bold ${
+      className={`md:py-3 md:px-4 py-2 px-2 flex items-center md:w-44 w-32 font-bold ${
         small && "w-32"
       } ${green && "bg-[#0DD6B8]"} ${white && "border-gradient"}`}
     >
-      <p className="mb-0">{text}</p>
+      <p className="mb-0 md:text-lg text-[10px]">{text}</p>
       {Icon && <Icon size={25} />}
     </Button>
   );
