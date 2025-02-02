@@ -4,7 +4,7 @@ import { fetchCartLength } from "../redux/slice/count";
 import { SlBasket } from "react-icons/sl";
 
 interface AddToCart {
-  onClick: () => {};
+  onClick: () => void;
 }
 
 const AddToCart: React.FC<AddToCart> = ({ onClick }) => {
