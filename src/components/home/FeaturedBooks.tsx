@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import { getBookData } from "../../../utils/firebase";
+
+import { getBookData, getWriterData } from "../../../utils/firebase";
 import Heading from "../general/Heading";
 import BasicButton from "../general/Button";
-// import FeaturedWriter from "./FeaturedWriter";
-// import axios from "axios";
+import FeaturedWriter from "./FeaturedWriter";
 import { useNavigate } from "react-router";
 import ShortenedText from "../general/ShortenedText";
 
-// interface Writer {
-//   image: string;
-//   id: number;
-//   writer_name: string;
-//   publish_books: number;
-// }
+interface Writer {
+  id: number;
+  image: string;
+  writer_name: string;
+  publish_books: number;
+}
 
 const FeaturedBooks = () => {
   const [sliceData, setSliceData] = useState<object[] | null>(null);
-  // const [writerData, setWriterData] = useState<Writer[] | null>(null);
+  const [writerData, setWriterData] = useState<Writer[] | null>(null);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -25,10 +25,16 @@ const FeaturedBooks = () => {
     setSliceData(bookDataSlice);
   };
 
-  // const getWriterData = async () => {
-  //   const response = await axios.get("/data.json");
-  //   // setWriterData(response.data);
-  // };
+  const fetchWriterData = async () => {
+    const writerDataFirebase = await getWriterData();
+    const formattedWriterData = writerDataFirebase.map((writer: any) => ({
+      id: writer.id,
+      image: writer.image,
+      writer_name: writer.writer_name,
+      publish_books: writer.publish_books,
+    }));
+    setWriterData(formattedWriterData);
+  };
 
   const handleBookDetail = (id: number) => {
     navigate(`/books/book-detail/${id}`);
@@ -36,7 +42,7 @@ const FeaturedBooks = () => {
 
   useEffect(() => {
     fetchData();
-    // getWriterData();
+    fetchWriterData();
   }, []);
 
   return (
@@ -65,10 +71,10 @@ const FeaturedBooks = () => {
             </div>
           ))}
       </div>
-      {/* <div className="flex flex-col lg:w-1/2 w-full bg-white p-4 rounded-lg">
+      <div className="flex flex-col lg:w-1/2 w-full bg-white p-4 rounded-lg">
         <Heading text="Featured Writer" select />
         <FeaturedWriter writerData={writerData} />
-      </div> */}
+      </div>
     </div>
   );
 };

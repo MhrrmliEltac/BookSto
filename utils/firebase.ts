@@ -39,6 +39,7 @@ const auth = getAuth(app);
 export const db = getFirestore(app);
 let userId: number = 3;
 const booksRef = collection(db, "books");
+const writerRef = collection(db, "writer");
 
 export const signUp = async (
   email: string,
@@ -369,4 +370,22 @@ export const checkUserRole = async (uid: string) => {
   } catch (error) {
     toast.error((error as Error).message);
   }
+};
+
+export const getWriterData = async () => {
+  let writerData = [];
+  const writerArr = await getDocs(writerRef)
+    .then((snapshot) => {
+      const writer = snapshot.docs.map((doc) => ({
+        id: Number(doc.id),
+        ...doc.data(),
+      }));
+      return writer;
+    })
+    .catch((error) => {
+      console.log(error);
+      return [];
+    });
+  writerData = writerArr;
+  return writerData;
 };
