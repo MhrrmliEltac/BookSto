@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addReview, fetchDocumentsByCondition } from "../../../utils/firebase";
+import {  fetchDocumentsByCondition } from "../../../utils/firebase";
 import { useParams } from "react-router";
 import Heading from "../general/Heading";
 import ShortenedText from "../general/ShortenedText";
@@ -7,9 +7,7 @@ import BasicRating from "../general/Rating";
 import BasicButton from "../general/Button";
 import { MdFavorite } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
-interface CommentType {
-  comment: string[];
-}
+
 
 const BookDetail = () => {
   const [bookDetails, setBookDetails] = useState<object[] | undefined>(

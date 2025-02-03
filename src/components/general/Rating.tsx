@@ -1,5 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import { useAppSelector } from "../../hook/hooks";
 import toast from "react-hot-toast";
@@ -10,8 +9,13 @@ interface Id {
 }
 
 export default function BasicRating({ bookId }: Id) {
-  const [valueRatingNum, setValueRating] = React.useState<number[]>([]);
-  const [isAdded, setIsAdded] = React.useState<boolean>(false);
+  const [valueRatingNum, setValueRating] = React.useState<number[] | null>();
+  const [, setEvent] = React.useState<React.SyntheticEvent<
+    Element,
+    Event
+  > | null>(null);
+  const [showMessage, setShowMessage] = React.useState<boolean>(false);
+  let ratingNumArr: number[] = [];
 
   const user = useAppSelector((state: any) => state.auth.user);
 
@@ -32,60 +36,48 @@ export default function BasicRating({ bookId }: Id) {
     }
   };
 
-  const handleChangeRating = (
+  const handleChangeRating = async (
     event: React.SyntheticEvent<Element, Event>,
     newValue: number | null
   ) => {
     if (newValue !== null) {
-      setValueRating((prevRatings) => [...prevRatings, newValue]);
+      ratingNumArr.push(newValue);
+      setEvent(event);
     }
   };
 
   const addRatingToReview = async () => {
-    console.log(valueRatingNum);
-    setIsAdded(!isAdded);
+    setShowMessage(true);
     if (!user || user.length === 0) {
       toast.error("Please, sign in or sign up");
       return;
     }
-
-    if (isAdded) {
-      if (valueRatingNum.length === 0) {
-        toast.error("Please select a rating.");
-        return;
-      }
-    }
-
     try {
-      if (isAdded) {
-        await addReview(
-          {
-            rating: valueRatingNum,
-          },
-          bookId
-        );
-      }
+      await addReview({ rating: ratingNumArr }, bookId);
+      if (showMessage) toast.success("Rating added successfully");
+      await getBookDataFull();
+      setShowMessage(false);
     } catch (error) {
-      toast.error("Failed to add rating. Please try again.");
+      console.error(error);
     }
   };
 
-  let value = valueRatingNum.reduce((acc, curr) => acc + curr, 0);
-  let newValue = value / valueRatingNum.length;
+  let value = valueRatingNum?.reduce((acc, curr) => acc + curr, 0) ?? 0;
+  let ratingValue =
+    valueRatingNum && valueRatingNum.length > 0
+      ? value / valueRatingNum.length
+      : 0;
 
   React.useEffect(() => {
     getBookDataFull();
   }, [bookId]);
 
   return (
-    <Box sx={{ "& > legend": { mt: 2 }, cursor: "pointer" }}>
-      <Rating
-        disabled={!user || user.length === 0}
-        name="simple-controlled"
-        value={newValue}
-        onChange={handleChangeRating}
-        onClick={addRatingToReview}
-      />
-    </Box>
+    <Rating
+      disabled={!user || user.length === 0}
+      value={ratingValue}
+      onChange={handleChangeRating}
+      onClick={addRatingToReview}
+    />
   );
 }

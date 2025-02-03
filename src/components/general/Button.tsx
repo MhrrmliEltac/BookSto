@@ -38,11 +38,9 @@ const BasicButton: React.FC<BtnProps> = ({
       } ${green && "bg-[#0DD6B8]"} ${white && "border-gradient"} ${
         check && "w-full"
       }
-      ${search && "md:w-20"}`}
+      ${search && "width-20"}`}
     >
-      <p
-        className={`mb-0 md:text-lg text-[10px] ${search && "md:text-[12px]"}`}
-      >
+      <p className={`mb-0 md:text-lg text-[10px] ${search && "text-10"}`}>
         {text}
       </p>
       {Icon && <Icon size={25} />}

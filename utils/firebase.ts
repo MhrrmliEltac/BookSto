@@ -151,23 +151,30 @@ interface Review {
 //? --> Tomorrow add comment
 
 export const addReview = async (
-  { comment, rating }: Review,
+  { rating }: { rating: number[] },
   Id: number
-): Promise<void> => {
+) => {
   try {
-    if (!Id) {
-      throw new Error("Book ID is undefined or invalid");
-    }
+    if (!Id) throw new Error("Book ID is undefined or invalid");
 
     const bookId = Id.toString();
-
     const bookRef = doc(db, "books", bookId);
 
-    await updateDoc(bookRef, {
-      review: { rating: rating ? arrayUnion(...rating) : [] },
-    });
+    // Mövcud review-u Firebase-dən alırıq
+    const docSnap = await getDoc(bookRef);
+    let existingRatings: number[] = [];
 
-    toast.success("Review added successfully");
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      existingRatings = data?.review?.rating || [];
+    }
+
+    // Yeni rating-i mövcud array-ə əlavə edirik
+    const updatedRatings = [...existingRatings, ...rating];
+
+    await updateDoc(bookRef, {
+      "review.rating": updatedRatings,
+    });
   } catch (error) {
     toast.error(`Error adding review: ${(error as Error).message}`);
   }
