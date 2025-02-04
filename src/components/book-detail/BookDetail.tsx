@@ -20,7 +20,7 @@ interface Book {
   image: string;
   author: string;
   description: string;
-  review?: Review; 
+  review?: Review;
 }
 
 const BookDetail = () => {
@@ -58,7 +58,7 @@ const BookDetail = () => {
 
   useEffect(() => {
     fetchBookToId(params.id);
-  }, [textArea]);
+  }, [textArea, addCommentToReview]);
 
   return (
     <div className="container">
