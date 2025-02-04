@@ -9,7 +9,7 @@ import ResponsiveSearch from "./ResponsiveSearch";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  
+
   const navigateTo = (url: string) => {
     navigate(`/${url}`);
   };
@@ -19,7 +19,11 @@ const Navbar = () => {
       <div className="w-[80%] py-2 flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <div onClick={() => navigate("/")}>
-            <img src={logo} alt="" className="w-full md:h-10 h-6 cursor-pointer" />
+            <img
+              src={logo}
+              alt=""
+              className="w-15 md:w-20 md:h-10 h-6 cursor-pointer"
+            />
           </div>
           <Seacrh />
         </div>
