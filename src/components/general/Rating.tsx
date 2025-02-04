@@ -2,7 +2,7 @@ import * as React from "react";
 import Rating from "@mui/material/Rating";
 import { useAppSelector } from "../../hook/hooks";
 import toast from "react-hot-toast";
-import { addReview, fetchDocumentsByCondition } from "../../../utils/firebase";
+import { addRating, fetchDocumentsByCondition } from "../../../utils/firebase";
 
 interface Id {
   bookId: number;
@@ -53,9 +53,10 @@ export default function BasicRating({ bookId }: Id) {
       return;
     }
     try {
-      await addReview({ rating: ratingNumArr }, bookId);
+      await addRating({ rating: ratingNumArr }, bookId);
       if (showMessage) toast.success("Rating added successfully");
       await getBookDataFull();
+      ratingNumArr.pop();
       setShowMessage(false);
     } catch (error) {
       console.error(error);

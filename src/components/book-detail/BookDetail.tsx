@@ -1,25 +1,43 @@
 import { useEffect, useState } from "react";
-import {  fetchDocumentsByCondition } from "../../../utils/firebase";
+import { addComment, fetchDocumentsByCondition } from "../../../utils/firebase";
 import { useParams } from "react-router";
 import Heading from "../general/Heading";
 import ShortenedText from "../general/ShortenedText";
 import BasicRating from "../general/Rating";
 import BasicButton from "../general/Button";
 import { MdFavorite } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
+import toast from "react-hot-toast";
+import Comments from "./Comments";
 
+interface Review {
+  comment: string[];
+}
+
+interface Book {
+  id: string;
+  book_name: string;
+  price: number;
+  image: string;
+  author: string;
+  description: string;
+  review?: Review; 
+}
 
 const BookDetail = () => {
   const [bookDetails, setBookDetails] = useState<object[] | undefined>(
     undefined
   );
   const [textArea, setTextArea] = useState<string>();
+  const [bookCommentState, setBookComment] = useState<any>();
+
   let params = useParams();
+  let bookComment: string[] = [];
 
   const fetchBookToId = async (id: string | undefined) => {
     const book = await fetchDocumentsByCondition("books", Number(id));
     if (book) {
       setBookDetails(book);
+      setBookComment((book[0] as Book)?.review?.comment || []);
     }
   };
 
@@ -28,9 +46,19 @@ const BookDetail = () => {
     setTextArea(e.target.value);
   };
 
+  const addCommentToReview = async (id: number) => {
+    if (textArea) {
+      setTextArea("");
+      bookComment.push(textArea);
+      await addComment({ comment: bookComment }, id);
+      toast.success("Comment added successfully");
+      bookComment.pop();
+    }
+  };
+
   useEffect(() => {
     fetchBookToId(params.id);
-  }, []);
+  }, [textArea]);
 
   return (
     <div className="container">
@@ -87,7 +115,10 @@ const BookDetail = () => {
                       value={textArea}
                     ></textarea>
                     <div>
-                      <button className="rounded-lg bg-blue-500 px-4 text-white py-1 text-sm">
+                      <button
+                        className="rounded-lg bg-blue-500 px-4 text-white py-1 text-sm"
+                        onClick={() => addCommentToReview(detail.id)}
+                      >
                         Send
                       </button>
                     </div>
@@ -99,12 +130,10 @@ const BookDetail = () => {
       </div>
       <div className="flex flex-col rounded-md bg-white p-4 mt-10">
         <Heading text="Review" />
-        <div className="mt-3 md:mt-5 flex gap-2 items-center">
-          <div className="flex items-center justify-center rounded-full p-2 bg-black text-white">
-            <FaUser size={12} />
-          </div>
-          <p className="mb-0">Salam</p>
-        </div>
+        {bookCommentState &&
+          bookCommentState.map((comment: string) => (
+            <Comments comment={comment} />
+          ))}
       </div>
     </div>
   );

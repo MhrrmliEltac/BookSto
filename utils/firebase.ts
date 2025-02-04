@@ -150,7 +150,7 @@ interface Review {
 
 //? --> Tomorrow add comment
 
-export const addReview = async (
+export const addRating = async (
   { rating }: { rating: number[] },
   Id: number
 ) => {
@@ -160,7 +160,6 @@ export const addReview = async (
     const bookId = Id.toString();
     const bookRef = doc(db, "books", bookId);
 
-    // Mövcud review-u Firebase-dən alırıq
     const docSnap = await getDoc(bookRef);
     let existingRatings: number[] = [];
 
@@ -169,11 +168,37 @@ export const addReview = async (
       existingRatings = data?.review?.rating || [];
     }
 
-    // Yeni rating-i mövcud array-ə əlavə edirik
     const updatedRatings = [...existingRatings, ...rating];
 
     await updateDoc(bookRef, {
       "review.rating": updatedRatings,
+    });
+  } catch (error) {
+    toast.error(`Error adding review: ${(error as Error).message}`);
+  }
+};
+
+export const addComment = async (
+  { comment }: { comment: string[] },
+  Id: number
+) => {
+  try {
+    if (!Id) toast.error("Book ID is undefined");
+
+    const bookId = Id.toString();
+    const bookRef = doc(db, "books", bookId);
+
+    const docSnap = await getDoc(bookRef);
+    let existingComment: string[] = [];
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      existingComment = data?.review?.comment || [];
+    }
+
+    const updateComment = [...existingComment, ...comment];
+    await updateDoc(bookRef, {
+      "review.comment": updateComment,
     });
   } catch (error) {
     toast.error(`Error adding review: ${(error as Error).message}`);
