@@ -48,7 +48,7 @@ const Seacrh = () => {
       </div>
 
       {searchBook.length > 0 && (
-        <div className="absolute top-16 left-60 bg-white p-2 rounded-md shadow-md w-[25%] md:flex hidden">
+        <div className="absolute top-16 left-60 bg-white p-2 rounded-md shadow-md w-[25%] md:flex flex-col hidden">
           {searchBook.map((book) => (
             <SearchItem book={book} key={book.id} />
           ))}

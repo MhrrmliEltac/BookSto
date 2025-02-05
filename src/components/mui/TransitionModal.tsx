@@ -15,7 +15,7 @@ const style = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height:"50%"
+  height:"70%"
 };
 
 type ModalProps = {

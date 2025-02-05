@@ -48,7 +48,7 @@ const ModalSearch = () => {
       </div>
 
       {searchBook.length > 0 && (
-        <div className=" bg-white p-2 rounded-md shadow-md w-full flex ">
+        <div className=" bg-white p-2 rounded-md shadow-md w-full flex flex-col overflow-auto h-20">
           {searchBook.map((book) => (
             <SearchItem book={book} key={book.id} />
           ))}

@@ -49,3 +49,22 @@
 .text-10 {
   font-size: 10px !important;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: #0dd6b8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f1f1f1;
+}

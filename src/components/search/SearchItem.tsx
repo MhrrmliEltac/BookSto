@@ -8,7 +8,7 @@ const SearchItem = ({ book }: { book: any }) => {
   };
 
   return (
-    <div className="flex justify-between mb-2">
+    <div className="flex justify-between mb-2 items-center">
       <div className="flex gap-2 justify-start items-center">
         <img src={book.image} alt="" className="w-10 h-10 rounded-full" />
         <p className="mb-0 text-sm w-[150px] font-medium">{book.book_name}</p>
