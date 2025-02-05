@@ -43,7 +43,20 @@ function SwiperComp() {
       modules={[EffectCoverflow]}
       className="swiper_container"
       onSwiper={(swiper) => (swiperRef.current = swiper)}
-      slidesPerView={5}
+      breakpoints={{
+        270: {
+          slidesPerView: 1,
+        },
+        501: {
+          slidesPerView: 2,
+        },
+        820: {
+          slidesPerView: 4,
+        },
+        1030: {
+          slidesPerView: 5,
+        },
+      }}
     >
       {loading
         ? Array.from({ length: 15 }).map((_, index) => (

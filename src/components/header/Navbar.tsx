@@ -22,7 +22,7 @@ const Navbar = () => {
             <img
               src={logo}
               alt=""
-              className="w-15 md:w-20 md:h-10 h-6 cursor-pointer"
+              className="w-18 md:w-20 md:h-10 h-6 cursor-pointer"
             />
           </div>
           <Seacrh />
