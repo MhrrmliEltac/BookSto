@@ -39,26 +39,31 @@ const ManageBook = () => {
   };
 
   const columns: GridColDef[] = [
-    { field: "book_name", headerName: "Book Name", width: 230 },
-    { field: "author", headerName: "Author Name", width: 230 },
+    { field: "book_name", headerName: "📖 Book Name", width: 230 },
+    { field: "author", headerName: "✍️ Author", width: 200 },
     {
       field: "price",
-      headerName: "Price",
+      headerName: "💰 Price",
       type: "number",
-      width: 90,
+      width: 100,
       renderCell: (params) => `${params.value} $`,
     },
     {
+      field: "genre",
+      headerName: "📚 Genre",
+      width: 160,
+    },
+    {
       field: "button",
-      headerName: "Actions",
-      width: 100,
+      headerName: "🛠 Actions",
+      width: 120,
       renderCell: (params) => (
         <div className="w-full flex justify-center items-center h-full">
           <button
-            className="text-red-500 hover:text-red-700"
+            className="text-red-500 hover:text-red-700 transition duration-300"
             onClick={() => deleteBookData(params.row.id)}
           >
-            <MdDelete size={20} />
+            <MdDelete size={22} />
           </button>
         </div>
       ),
@@ -66,21 +71,48 @@ const ManageBook = () => {
   ];
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="p-4 gap-2 flex-wrap w-[80%]">
+    <div className="h-screen flex items-center justify-center bg-gray-900">
+      <div className="p-4 rounded-2xl w-[80%] shadow-lg">
         <Paper
-          className="w-full min-w-[600px]"
-          sx={{ backgroundColor: "#fff" }}
+          className="w-full min-w-[600px] overflow-hidden"
+          sx={{
+            borderRadius: "16px",
+            padding: "16px",
+          }}
         >
           <DataGrid
             rows={book}
             columns={columns}
-            pageSizeOptions={[5, 10, 20]} 
+            pageSizeOptions={[5, 10, 20]}
             paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel} 
-            paginationMode="client" 
-            checkboxSelection
-            sx={{ border: 0, minWidth: 600 }}
+            onPaginationModelChange={setPaginationModel}
+            paginationMode="client"
+            sx={{
+              border: "none",
+              "& .MuiDataGrid-cell": {
+                color: "#333",
+                borderBottom: "1px solid #E0E0E0",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#D6E6FF ",
+                color: "#333",
+                fontWeight: "bold",
+                fontSize: "16px",
+              },
+              "& .MuiDataGrid-row:hover": {
+                backgroundColor: "#F0F0F0",
+                transition: "0.3s",
+              },
+              "& .MuiCheckbox-root": {
+                color: "#4A90E2",
+              },
+              "& .MuiSvgIcon-root": {
+                color: "#4A90E2",
+              },
+              "& .MuiTablePagination-root": {
+                color: "#555",
+              },
+            }}
           />
         </Paper>
       </div>

@@ -72,8 +72,8 @@ const AddBookk = () => {
   };
 
   return (
-    <div className="h-screen items-center flex justify-center">
-      <div className="flex p-4 gap-2 h-min flex-wrap justify-center">
+    <div className="h-screen items-center flex justify-center bg-gray-900">
+      <div className="flex p-4 gap-2 h-min flex-wrap justify-center bg-white rounded-2xl w-[80%]">
         <input
           className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
           type="text"
