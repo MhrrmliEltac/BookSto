@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import {
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   endAt,
   getDoc,
@@ -114,22 +115,40 @@ export const recoverPass = async (email: string) => {
   }
 };
 
-export const getBookData = async () => {
-  let bookArr: object[] = [];
-  const data = await getDocs(booksRef)
-    .then((snapshot) => {
-      const books = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      return books;
-    })
-    .catch((error) => {
-      console.log(error);
-      return [];
+export const getBookData = async (): Promise<Book[]> => {
+  try {
+    const snapshot = await getDocs(booksRef);
+    const books: Book[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+
+      return {
+        id: Number(doc.id),
+        book_name: data.book_name || "Unknown",
+        author: data.author || "Unknown",
+        price: data.price || 0,
+        description: data.description || "",
+        image: data.image || "",
+        genre: data.genre || "Unknown",
+        review: data.review || { comment: "", rating: [] },
+      };
     });
-  bookArr = data;
-  return bookArr;
+
+    return books;
+  } catch (error) {
+    console.error("Error fetching book data:", error);
+    return [];
+  }
+};
+
+export const deleteBook = async (bookId: string) => {
+  try {
+    const bookRef = doc(db, "books", bookId);
+    await deleteDoc(bookRef);
+
+    toast.success(`Book deleted successfully`);
+  } catch (error) {
+    console.error("Error deleting book:", error);
+  }
 };
 
 export interface Book {
