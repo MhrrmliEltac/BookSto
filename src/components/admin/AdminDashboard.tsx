@@ -10,7 +10,7 @@ const AdminDashboard = () => {
       <div className="md:w-1/6">
         <AdminNavbar />
       </div>
-      <div className="md:w-1/2 w-full">
+      <div className="w-[80%] md:w-full">
         <Routes>
           <Route path="add-book" element={<AddBookk />} />
           <Route path="manage-book" element={<ManageBook />} />

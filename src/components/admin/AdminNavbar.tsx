@@ -41,7 +41,7 @@ const AdminNavbar = () => {
             <div>
               <ul className="px-0">
                 <li className="flex w-full justify-start items-center p-2 mt-5">
-                  <img src={logo} alt="Logo" className="w-20" />
+                  <img src={logo} alt="Logo" className="w-20" loading="lazy" />
                 </li>
               </ul>
 
@@ -91,7 +91,7 @@ const AdminNavbar = () => {
           </div>
         </div>
         <button
-          className="text-white hover:bg-gray-600 p-2 rounded cursor-pointer md:hidden left-48 fixed"
+          className="text-white hover:bg-gray-600 p-2 rounded cursor-pointer md:hidden right-0 fixed"
           onClick={toggleMenu}
         >
           <FaTimes size={25} />

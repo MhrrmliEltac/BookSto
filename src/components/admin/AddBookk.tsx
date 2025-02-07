@@ -28,7 +28,7 @@ const AddBookk = () => {
 
   useEffect(() => {
     const savedId = localStorage.getItem("bookId");
-    const newId = savedId ? +savedId : 1; 
+    const newId = savedId ? +savedId : 1;
     setBookId(newId);
   }, []);
 
@@ -72,58 +72,60 @@ const AddBookk = () => {
   };
 
   return (
-    <div className="flex flex-col p-4 gap-2 h-screen justify-center">
-      <input
-        className="border-b-2 placeholder:text-slate-500 outline-none"
-        type="text"
-        name="book_name"
-        placeholder="Kitabın adı"
-        value={books.book_name}
-        onChange={handleChangeInput}
-      />
-      <input
-        className="border-b-2 placeholder:text-slate-500 outline-none"
-        type="text"
-        name="author"
-        placeholder="Müəllifin adı"
-        value={books.author}
-        onChange={handleChangeInput}
-      />
-      <input
-        className="border-b-2 placeholder:text-slate-500 outline-none"
-        type="text"
-        name="description"
-        placeholder="Kitabın təsviri"
-        value={books.description}
-        onChange={handleChangeInput}
-      />
-      <input
-        className="border-b-2 placeholder:text-slate-500 outline-none"
-        type="text"
-        name="image"
-        placeholder="Kitabın şəkli"
-        value={books.image}
-        onChange={handleChangeInput}
-      />
-      <input
-        className="border-b-2 placeholder:text-slate-500 outline-none"
-        type="text"
-        name="genre"
-        placeholder="Janr"
-        value={books.genre}
-        onChange={handleChangeInput}
-      />
-      <input
-        className="border-b-2 placeholder:text-slate-500 outline-none"
-        type="number"
-        name="price"
-        placeholder="Qiymət"
-        value={books.price}
-        onChange={handleChangeInput}
-      />
-      <Button type="submit" onClick={handleAddBook} variant="success">
-        Əlavə et
-      </Button>
+    <div className="h-screen items-center flex justify-center">
+      <div className="flex p-4 gap-2 h-min flex-wrap justify-center">
+        <input
+          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
+          type="text"
+          name="book_name"
+          placeholder="Kitabın adı"
+          value={books.book_name}
+          onChange={handleChangeInput}
+        />
+        <input
+          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
+          type="text"
+          name="author"
+          placeholder="Müəllifin adı"
+          value={books.author}
+          onChange={handleChangeInput}
+        />
+        <input
+          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
+          type="text"
+          name="description"
+          placeholder="Kitabın təsviri"
+          value={books.description}
+          onChange={handleChangeInput}
+        />
+        <input
+          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
+          type="text"
+          name="image"
+          placeholder="Kitabın şəkli"
+          value={books.image}
+          onChange={handleChangeInput}
+        />
+        <input
+          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
+          type="text"
+          name="genre"
+          placeholder="Janr"
+          value={books.genre}
+          onChange={handleChangeInput}
+        />
+        <input
+          className="border-b-2 placeholder:text-slate-500 outline-none w-full p-2 rounded shadow-inner"
+          type="number"
+          name="price"
+          placeholder="Qiymət"
+          value={books.price}
+          onChange={handleChangeInput}
+        />
+        <Button type="submit" onClick={handleAddBook} variant="success">
+          Əlavə et
+        </Button>
+      </div>
     </div>
   );
 };
