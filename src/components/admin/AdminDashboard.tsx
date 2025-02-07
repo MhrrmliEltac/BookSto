@@ -6,7 +6,7 @@ import ManageUsers from "./ManageUsers";
 
 const AdminDashboard = () => {
   return (
-    <div className="flex">
+    <div className="flex bg-gray-900">
       <div className="md:w-1/6">
         <AdminNavbar />
       </div>

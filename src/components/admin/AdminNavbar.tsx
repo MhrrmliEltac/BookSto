@@ -26,7 +26,7 @@ const AdminNavbar = () => {
   return (
     <>
       <button
-        className="text-gray-600 transition-all duration-200 p-2 rounded cursor-pointer md:hidden h-min"
+        className="text-white transition-all duration-200 p-2 rounded cursor-pointer md:hidden h-min"
         onClick={toggleMenu}
       >
         <FaBars size={25} />
