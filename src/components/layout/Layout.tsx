@@ -15,11 +15,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     "/auth/login",
     "/auth/register",
     "/auth/recover-password",
-    "/admin/control",
-    "/admin/control/admin-panel",
   ];
 
-  const isNavbarVisible = !hideNavbarFooterRoutes.includes(location.pathname);
+  const isAdminRoute = location.pathname.startsWith("/admin/control");
+
+  const isNavbarVisible =
+    !hideNavbarFooterRoutes.includes(location.pathname) && !isAdminRoute;
 
   return (
     <div>

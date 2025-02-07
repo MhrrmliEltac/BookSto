@@ -15,9 +15,9 @@ import BookDetail from "./components/book-detail/BookDetail";
 import BookList from "./components/UI/BookList";
 import Wishlist from "./components/wishlist/Wishlist";
 import AdminPanel from "./components/admin/AdminPanel";
-import AddBookk from "./components/admin/AddBookk";
 import PrivateRoute from "./components/private/PrivateRoutes";
 import CheckOut from "./components/checkout/CheckOut";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 function App() {
   return (
@@ -29,8 +29,8 @@ function App() {
             <Routes>
               <Route path="/admin/control" element={<AdminPanel />} />
               <Route
-                path="/admin/control/admin-panel"
-                element={<PrivateRoute children={<AddBookk />} />}
+                path="/admin/control/admin-panel/*"
+                element={<PrivateRoute children={<AdminDashboard />} />}
               />
               <Route path="/" element={<Home />} />
               <Route path="/user-profile" element={<UserProfile />} />
