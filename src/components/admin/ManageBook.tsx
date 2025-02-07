@@ -74,7 +74,7 @@ const ManageBook = () => {
     <div className="h-screen flex items-center justify-center bg-gray-900">
       <div className="p-4 rounded-2xl w-[80%] shadow-lg">
         <Paper
-          className="w-full min-w-[600px] overflow-hidden"
+          className="w-full overflow-hidden"
           sx={{
             borderRadius: "16px",
             padding: "16px",
