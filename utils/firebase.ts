@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -27,13 +29,13 @@ import {
 import { query, orderBy } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB44rOI8ZgedBZ1NRPG4kHl6qOoR8crDPM",
-  authDomain: "shop-22e7e.firebaseapp.com",
-  projectId: "shop-22e7e",
-  storageBucket: "shop-22e7e.firebasestorage.app",
-  messagingSenderId: "372305781797",
-  appId: "1:372305781797:web:213367ceedf9ffc96b0bcc",
-  measurementId: "G-C62BD2F3LN",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -434,8 +436,10 @@ export const checkUserRole = async (uid: string) => {
   }
 };
 
-export const getWriterData = async () => {
-  let writerData = [];
+export const getWriterData = async (): Promise<
+  { id: number; [key: string]: any }[]
+> => {
+  let writerData: { id: number; [key: string]: any }[] = [];
   const writerArr = await getDocs(writerRef)
     .then((snapshot) => {
       const writer = snapshot.docs.map((doc) => ({
