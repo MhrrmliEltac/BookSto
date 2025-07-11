@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import { addBook } from "../../../utils/firebase";
+import CustomTextField from "./custom/CustomTextField";
+import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { Button } from "react-bootstrap";
+import { addBook } from "../../../utils/firebase";
+import { validateBook } from "./helpers/validateField";
+import { Box, Card } from "@mui/material";
+import CustomButton from "./custom/CustomButton";
 
-type Books = {
+export type Books = {
   id: number;
   author: string;
   book_name: string;
@@ -23,6 +27,7 @@ const AddBookk = () => {
     image: "",
     price: 0,
   });
+  const [loading, setLoading] = useState(false);
 
   const [bookId, setBookId] = useState<number>(0);
 
@@ -31,35 +36,39 @@ const AddBookk = () => {
     const newId = savedId ? +savedId : 1;
     setBookId(newId);
   }, []);
+  const isValidField = validateBook(books);
+  const handleAddBook = async () => {
+    try {
+      setLoading(true);
 
-  const handleAddBook = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (
-      books.author.trim() !== "" &&
-      books.book_name.trim() !== "" &&
-      books.description.trim() !== "" &&
-      books.genre.trim() !== "" &&
-      books.image.trim() !== "" &&
-      books.price > 0
-    ) {
-      await addBook({ ...books, id: bookId });
-      toast.success("Kitab əlavə edildi");
+      if (isValidField) {
+        await addBook({ ...books, id: bookId });
+        toast.success("Kitab əlavə edildi");
 
-      const newId = bookId + 1;
-      setBookId(newId);
-      localStorage.setItem("bookId", newId.toString());
+        const newId = bookId + 1;
+        setBookId(newId);
+        localStorage.setItem("bookId", newId.toString());
 
-      setBooks({
-        id: newId,
-        author: "",
-        book_name: "",
-        description: "",
-        genre: "",
-        image: "",
-        price: 0,
-      });
-    } else {
-      toast.error("Bütün xanaları doldurun zəhmət olmasa");
+        setBooks({
+          id: newId,
+          author: "",
+          book_name: "",
+          description: "",
+          genre: "",
+          image: "",
+          price: 0,
+        });
+      } else {
+        toast.error("Bütün xanaları doldurun zəhmət olmasa");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error);
+      } else if (error instanceof AxiosError) {
+        toast.error(error.message);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,59 +82,61 @@ const AddBookk = () => {
 
   return (
     <div className="h-screen items-center flex justify-center ">
-      <div className="flex p-4 gap-2 h-min flex-wrap justify-center bg-white rounded-2xl w-[80%]">
-        <input
-          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
-          type="text"
+      <Card className="flex p-4 gap-2 h-min flex-wrap justify-center bg-white rounded-2xl w-[80%]">
+        <CustomTextField
+          fullwidth
+          label="Kitabın adı"
           name="book_name"
-          placeholder="Kitabın adı"
+          onChange={handleChangeInput}
           value={books.book_name}
-          onChange={handleChangeInput}
         />
-        <input
-          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
-          type="text"
+        <CustomTextField
+          fullwidth
+          label="Müəllifin adı"
           name="author"
-          placeholder="Müəllifin adı"
+          onChange={handleChangeInput}
           value={books.author}
-          onChange={handleChangeInput}
         />
-        <input
-          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
-          type="text"
+        <CustomTextField
+          fullwidth
+          label="Kitabın təsviri"
           name="description"
-          placeholder="Kitabın təsviri"
+          onChange={handleChangeInput}
           value={books.description}
-          onChange={handleChangeInput}
         />
-        <input
-          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
-          type="text"
+        <CustomTextField
+          fullwidth
+          label="Kitabın şəkli"
           name="image"
-          placeholder="Kitabın şəkli"
+          onChange={handleChangeInput}
           value={books.image}
-          onChange={handleChangeInput}
         />
-        <input
-          className="border-b-2 placeholder:text-slate-500 outline-none p-2 w-full rounded shadow-inner"
-          type="text"
+        <CustomTextField
+          fullwidth
+          label="Janr"
           name="genre"
-          placeholder="Janr"
+          onChange={handleChangeInput}
           value={books.genre}
-          onChange={handleChangeInput}
         />
-        <input
-          className="border-b-2 placeholder:text-slate-500 outline-none w-full p-2 rounded shadow-inner"
+        <CustomTextField
+          fullwidth
           type="number"
+          label="Qiymət"
           name="price"
-          placeholder="Qiymət"
-          value={books.price}
           onChange={handleChangeInput}
+          value={books.price}
         />
-        <Button type="submit" onClick={handleAddBook} variant="success">
-          Əlavə et
-        </Button>
-      </div>
+        <Box
+          sx={{ display: "flex", justifyContent: "end", width: "100%", mt: 5 }}
+        >
+          <CustomButton
+            title="Əlavə et"
+            disabled={!isValidField}
+            onClick={handleAddBook}
+            loading={loading}
+          />
+        </Box>
+      </Card>
     </div>
   );
 };
